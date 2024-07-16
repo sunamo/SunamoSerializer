@@ -1,4 +1,4 @@
-//namespace SunamoSerializer._sunamo.SunamoExceptions._AddedToAllCsproj;
+
 
 internal class CA
 {
@@ -12,7 +12,7 @@ internal class CA
     /// <param name="files_in"></param>
     /// <param name="what"></param>
     /// <param name="forWhat"></param>
-    public static void Replace(List<string> files_in, string what, string forWhat)
+    internal static void Replace(List<string> files_in, string what, string forWhat)
     {
         for (int i = 0; i < files_in.Count; i++)
         {
