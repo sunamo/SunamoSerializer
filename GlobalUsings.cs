@@ -16,3 +16,4 @@ global using SunamoSerializer._sunamo.SunamoData.Data;
 global using SunamoSerializer._sunamo.SunamoExceptions.OnlyInSE;
 global using System.Diagnostics;
 global using System.Net;
+global using SunamoSerializer._sunamo;

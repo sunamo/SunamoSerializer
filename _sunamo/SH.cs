@@ -1,4 +1,4 @@
-//namespace SunamoSerializer._sunamo.SunamoExceptions._AddedToAllCsproj;
+namespace SunamoSerializer._sunamo;
 
 internal class SH
 {

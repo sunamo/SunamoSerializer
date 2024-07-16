@@ -1,4 +1,4 @@
-
+namespace SunamoSerializer._sunamo;
 
 internal class CA
 {
