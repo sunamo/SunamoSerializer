@@ -18,7 +18,7 @@ global using SunamoSerializer._sunamo.SunamoStringSplit;
 global using SunamoSerializer._sunamo.SunamoValues;
 global using SunamoSerializer._sunamo.SunamoXlfKeys;
 global using SunamoSerializer._sunamo.SunamoData.Data;
-global using SunamoSerializer._sunamo.SunamoExceptions.InSunamoIsDerivedFrom;
+
 global using SunamoSerializer._sunamo.SunamoExceptions.OnlyInSE;
 global using SunamoSerializer._sunamo.SunamoExceptions._AddedToAllCsproj;
 global using System.Diagnostics;

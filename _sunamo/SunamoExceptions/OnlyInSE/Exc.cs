@@ -1,9 +1,5 @@
 namespace SunamoSerializer._sunamo.SunamoExceptions.OnlyInSE;
 
-
-
-
-
 internal class Exc
 {
     

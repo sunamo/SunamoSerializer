@@ -126,7 +126,7 @@ public static class SF
 
     public static List<string> RemoveComments(List<string> tf)
     {
-        //CASH.RemoveStringsEmpty2(tf);
+        //CA.RemoveStringsEmpty2(tf);
 
         tf = tf.Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
 
@@ -141,7 +141,7 @@ public static class SF
         //}
 
 
-        //CASH.RemoveStartingWith(AllStrings.num, tf);
+        //CA.RemoveStartingWith(AllStrings.num, tf);
 
         tf = tf.Where(d => !d.StartsWith(AllStrings.num)).ToList();
         return tf;
@@ -323,7 +323,7 @@ public static class SF
             await
 #endif
                 File.ReadAllTextAsync(path)).ToList();
-        CASE.Trim(content);
+        CA.Trim(content);
         //content += Environment.NewLine + line + Environment.NewLine;
         content.Add(line);
 
@@ -485,9 +485,9 @@ public static class SF
         {
             throw new Exception("replaceForSeparatorString is the same as separator");
         }
-        CASH.Replace(list, separator, replaceForSeparatorString);
-        CASH.Replace(list, Environment.NewLine, AllStrings.space);
-        CASE.Trim(list);
+        CA.Replace(list, separator, replaceForSeparatorString);
+        CA.Replace(list, Environment.NewLine, AllStrings.space);
+        CA.Trim(list);
         string vr = string.Join(separator.ToString(), list);
 
         if (removeLast)
@@ -540,7 +540,7 @@ public static class SF
         List<List<string>> vr = new List<List<string>>();
         // Sync protože mám v deklaraci out
         List<string> lines = SHGetLines.GetLines(File.ReadAllText(file));
-        CASE.Trim(lines);
+        CA.Trim(lines);
         if (lines.Count > 0)
         {
             hlavicka = GetAllElementsLine(lines[0], oddelovaciZnak);
@@ -560,7 +560,7 @@ public static class SF
                 //{
                 //nalezeno = 0;
                 List<string> columns = GetAllElementsLine(jedenRadek.ToString(), oddelovaciZnak);
-                CASE.Trim(columns);
+                CA.Trim(columns);
                 jedenRadek.Clear();
 
                 vr.Add(columns);

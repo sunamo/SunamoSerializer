@@ -1,4 +1,5 @@
 namespace SunamoSerializer._sunamo.SunamoBts;
+
 internal class BTS
 {
     internal static string ToString<T>(T t)
