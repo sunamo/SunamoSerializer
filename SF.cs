@@ -2,46 +2,65 @@ namespace SunamoSerializer;
 
 public static class SF
 {
-    private static SerializeContentArgs s_contentArgs = new SerializeContentArgs();
+    public const string replaceForSeparatorString = AllStrings.lowbar;
+    private static readonly SerializeContentArgs s_contentArgs = new();
+
+    private static Type type = typeof(SF);
+    public static readonly char replaceForSeparatorChar = AllChars.lowbar;
+    public static string dDeli = "|";
+
+    static SF()
+    {
+        s_contentArgs.separatorString = AllStrings.verbar;
+    }
+
+    private static Tuple<string, string, string> t => Exc.GetStackTrace2();
+
+    public static string separatorString
+    {
+        get => s_contentArgs.separatorString;
+
+        set => s_contentArgs.separatorString = value;
+    }
+
+    public static int keyCodeSeparator => s_contentArgs.separatorChar;
+
+    /// <summary>
+    ///     Must be property - I can forget change value on three occurences.
+    /// </summary>
+    public static char separatorChar => s_contentArgs.separatorChar;
+
     //CASH
     public static List<string> ParseUpToRequiredElementsLine(string input, int requiredCount)
     {
-        var p = SF.GetAllElementsLine(input);
+        var p = GetAllElementsLine(input);
         if (p.Count > requiredCount)
-        {
             throw new Exception($"p have {p.Count} elements, max is {requiredCount}");
-        }
-        else if (p.Count < requiredCount)
-        {
-            for (int i = p.Count - 1; i < requiredCount; i++)
-            {
+        if (p.Count < requiredCount)
+            for (var i = p.Count - 1; i < requiredCount; i++)
                 p.Add(string.Empty);
-            }
-        }
 
         return p;
     }
 
-    static Tuple<string, string, string> t => Exc.GetStackTrace2(true);
-
     public static Dictionary<T1, T2> ToDictionary<T1, T2>(List<List<string>> l)
     {
-        object s1 = BTS.MethodForParse<T1>();
-        object s2 = BTS.MethodForParse<T2>();
+        var s1 = BTS.MethodForParse<T1>();
+        var s2 = BTS.MethodForParse<T2>();
 
-        Func<string, T1> p1 = (Func<string, T1>)s1;
-        Func<string, T2> p2 = (Func<string, T2>)s2;
+        var p1 = (Func<string, T1>)s1;
+        var p2 = (Func<string, T2>)s2;
 
-        Dictionary<T1, T2> dict = new Dictionary<T1, T2>();
+        var dict = new Dictionary<T1, T2>();
 
-        T1 t1 = default(T1);
-        T2 t2 = default(T2);
+        var t1 = default(T1);
+        var t2 = default(T2);
 
-        Dictionary<int, List<string>> whereIsNotTwoEls = new Dictionary<int, List<string>>();
+        var whereIsNotTwoEls = new Dictionary<int, List<string>>();
 
-        int i = -1;
+        var i = -1;
 
-        foreach (List<string> item in l)
+        foreach (var item in l)
         {
             i++;
 
@@ -65,27 +84,13 @@ public static class SF
 
         if (whereIsNotTwoEls.Count != 0)
         {
-
         }
 
         return dict;
     }
 
-    public static string separatorString
-    {
-        get
-        {
-            return s_contentArgs.separatorString;
-        }
-
-        set
-        {
-            s_contentArgs.separatorString = value;
-        }
-    }
-
     /// <summary>
-    /// Without last |
+    ///     Without last |
     /// </summary>
     /// <param name="o"></param>
     /// <param name="p1"></param>
@@ -94,26 +99,25 @@ public static class SF
     {
         //var o3 = new List<string>(o);
         //var o2 = CA.Trim(o3);
-        string vr = string.Join(p1, o);
+        var vr = string.Join(p1, o);
         return vr;
         //return vr.Substring(0, vr.Length - p1.Length);
     }
 
     /// <summary>
-    /// Without last |
-    /// If need to combine string and IList, lets use CA.Join
-    /// DateTime is format with DTHelperEn.ToString
+    ///     Without last |
+    ///     If need to combine string and IList, lets use CA.Join
+    ///     DateTime is format with DTHelperEn.ToString
     /// </summary>
     /// <param name="p1"></param>
     /// <param name="o"></param>
     public static string PrepareToSerializationExplicit(IList o, string p1 = AllStrings.verbar)
     {
-
-        return PrepareToSerializationExplicitString(o, p1.ToString());
+        return PrepareToSerializationExplicitString(o, p1);
     }
 
     /// <summary>
-    /// In inner array is elements, in outer lines.
+    ///     In inner array is elements, in outer lines.
     /// </summary>
     /// <param name="file"></param>
     /// <returns></returns>
@@ -145,17 +149,13 @@ public static class SF
 
         tf = tf.Where(d => !d.StartsWith(AllStrings.num)).ToList();
         return tf;
-
     }
 
-    public static List<List<string>> GetAllElementsFile(string file, ref string firstCommentLine, string oddelovaciZnak = AllStrings.verbar)
+    public static List<List<string>> GetAllElementsFile(string file, ref string firstCommentLine,
+        string oddelovaciZnak = AllStrings.verbar)
     {
-
         var (header, rows) = GetAllElementsFileAdvanced(file, oddelovaciZnak);
-        if (header.Count > 0)
-        {
-            rows.Insert(0, header);
-        }
+        if (header.Count > 0) rows.Insert(0, header);
 
         return rows;
     }
@@ -168,11 +168,8 @@ public static class SF
 #endif
         Dictionary<T1, T2>(string file, Dictionary<T1, T2> artists)
     {
-        StringBuilder sb = new StringBuilder();
-        foreach (var item in artists)
-        {
-            sb.AppendLine(PrepareToSerialization(item.Key.ToString(), item.Value.ToString()));
-        }
+        var sb = new StringBuilder();
+        foreach (var item in artists) sb.AppendLine(PrepareToSerialization(item.Key.ToString(), item.Value.ToString()));
 
 
 #if ASYNC
@@ -183,34 +180,32 @@ public static class SF
 
     public static void WriteAllElementsToFile<Key, Value>(string coolPeopleShortcuts, Dictionary<Key, Value> d2)
     {
-        List<List<string>> list = ListFromDictionary(d2);
+        var list = ListFromDictionary(d2);
         WriteAllElementsToFile(coolPeopleShortcuts, list);
     }
 
     public static async Task WriteAllElementsToFile(string VybranySouborLogu, List<List<string>> p)
     {
-        StringBuilder sb = new StringBuilder();
-        foreach (var item in p)
-        {
-            sb.AppendLine(PrepareToSerialization2(item));
-        }
+        var sb = new StringBuilder();
+        foreach (var item in p) sb.AppendLine(PrepareToSerialization2(item));
 
         await File.WriteAllTextAsync(VybranySouborLogu, sb.ToString());
     }
 
     public static List<List<string>> ListFromDictionary<Key, Value>(Dictionary<Key, Value> d2)
     {
-        List<List<string>> vs = new List<List<string>>();
+        var vs = new List<List<string>>();
         foreach (var item in d2)
         {
             vs.Add([item.Key.ToString(), item.Value.ToString()]);
         }
+
         return vs;
     }
 
     /// <summary>
-    /// Without last |
-    /// DateTime is format with DTHelperEn.ToString
+    ///     Without last |
+    ///     DateTime is format with DTHelperEn.ToString
     /// </summary>
     /// <param name="o"></param>
     /// <param name="separator"></param>
@@ -218,7 +213,6 @@ public static class SF
     {
         return PrepareToSerializationWorker(o, true, dDeli);
     }
-
 
 
     ///// <summary>
@@ -234,10 +228,10 @@ public static class SF
     //}
 
     /// <summary>
-    /// Return without last
-    /// If need to combine string and IList, lets use CA.Join
+    ///     Return without last
+    ///     If need to combine string and IList, lets use CA.Join
     /// </summary>
-    /// <param name = "o"></param>
+    /// <param name="o"></param>
     public static string PrepareToSerializationExplicit2(IList<string> o, string separator = AllStrings.verbar)
     {
         return PrepareToSerializationWorker(o, true, separator);
@@ -252,62 +246,31 @@ public static class SF
         DictionaryAppend(string v, Dictionary<int, string> toSave)
     {
         var c = await File.ReadAllTextAsync(v);
-        var s = ListFromDictionary<int, string>(toSave);
+        var s = ListFromDictionary(toSave);
         var s2 = ToDictionary<int, string>(s);
 
-        StringBuilder sb = new StringBuilder();
-        foreach (var item in s2)
-        {
-            sb.AppendLine(SF.PrepareToSerialization(item.Key.ToString(), item.Value));
-        }
+        var sb = new StringBuilder();
+        foreach (var item in s2) sb.AppendLine(PrepareToSerialization(item.Key.ToString(), item.Value));
 
 #if ASYNC
         await
 #endif
-            File.AppendAllTextAsync(v, sb.ToString() + Environment.NewLine);
+            File.AppendAllTextAsync(v, sb + Environment.NewLine);
     }
 
-    public static int keyCodeSeparator
-    {
-        get
-        {
-            return (int)s_contentArgs.separatorChar;
-        }
-    }
-
-    /// <summary>
-    /// Must be property - I can forget change value on three occurences.
-    /// </summary>
-    public static char separatorChar
-    {
-        get
-        {
-            return s_contentArgs.separatorChar;
-        }
-    }
-
-    static SF()
-    {
-        s_contentArgs.separatorString = AllStrings.verbar;
-    }
-
-    /// <param name = "element"></param>
-    /// <param name = "line"></param>
-    /// <param name = "elements"></param>
+    /// <param name="element"></param>
+    /// <param name="line"></param>
+    /// <param name="elements"></param>
     private static string GetElementAtIndex(List<List<string>> elements, int element, int line)
     {
         if (elements.Count > line)
         {
             var lineElements = elements[line];
-            if (lineElements.Count > element)
-            {
-                return lineElements[element];
-            }
+            if (lineElements.Count > element) return lineElements[element];
         }
 
         return null;
     }
-
 
 
     public static
@@ -346,74 +309,59 @@ public static class SF
 
     private static List<List<string>> GetAllElementsLines(List<string> lines, ref string firstLIne)
     {
-        lines = SF.RemoveComments(lines);
+        lines = RemoveComments(lines);
 
-        List<List<string>> vr = new List<List<string>>();
-        foreach (string var in lines)
-        {
+        var vr = new List<List<string>>();
+        foreach (var var in lines)
             if (!string.IsNullOrWhiteSpace(var))
-            {
-                vr.Add(SF.GetAllElementsLine(var));
-            }
-        }
+                vr.Add(GetAllElementsLine(var));
         return vr;
     }
 
     /// <summary>
-    /// If index won't founded, return null.
+    ///     If index won't founded, return null.
     /// </summary>
-    /// <param name = "element"></param>
-    /// <param name = "line"></param>
+    /// <param name="element"></param>
+    /// <param name="line"></param>
     public static string GetElementAtIndexFile(string file, int element, int line)
     {
-        List<List<string>> elements = GetAllElementsFile(file);
+        var elements = GetAllElementsFile(file);
         return GetElementAtIndex(elements, element, line);
     }
 
     /// <summary>
-    /// G null if first element on any lines A2 dont exists
+    ///     G null if first element on any lines A2 dont exists
     /// </summary>
-    /// <param name = "file"></param>
-    /// <param name = "element"></param>
+    /// <param name="file"></param>
+    /// <param name="element"></param>
     public static List<string> GetFirstWhereIsFirstElement(string file, string element)
     {
-        List<List<string>> elementsLines = SF.GetAllElementsFile(file);
-        for (int i = 0; i < elementsLines.Count; i++)
-        {
+        var elementsLines = GetAllElementsFile(file);
+        for (var i = 0; i < elementsLines.Count; i++)
             if (elementsLines[i][0] == element)
-            {
                 return elementsLines[i];
-            }
-        }
 
         return null;
     }
 
     /// <summary>
-    /// G null if first element on any lines A2 dont exists
+    ///     G null if first element on any lines A2 dont exists
     /// </summary>
-    /// <param name = "file"></param>
-    /// <param name = "element"></param>
+    /// <param name="file"></param>
+    /// <param name="element"></param>
     public static List<string> GetLastWhereIsFirstElement(string file, string element)
     {
-        List<List<string>> elementsLines = SF.GetAllElementsFile(file);
-        for (int i = elementsLines.Count - 1; i >= 0; i--)
-        {
+        var elementsLines = GetAllElementsFile(file);
+        for (var i = elementsLines.Count - 1; i >= 0; i--)
             if (elementsLines[i][0] == element)
-            {
                 return elementsLines[i];
-            }
-        }
 
         return null;
     }
 
 
-
-
-
     /// <summary>
-    /// Read text with first delimitech which automatically delimite
+    ///     Read text with first delimitech which automatically delimite
     /// </summary>
     /// <param name="fileNameOrPath"></param>
     public static void ReadFileOfSettingsOther(string fileNameOrPath)
@@ -424,34 +372,22 @@ public static class SF
         if (lines.Count > 1)
         {
             int delimiterInt;
-            if (int.TryParse(lines[0], out delimiterInt))
-            {
-                separatorString = ((char)delimiterInt).ToString();
-            }
+            if (int.TryParse(lines[0], out delimiterInt)) separatorString = ((char)delimiterInt).ToString();
         }
     }
 
     public static async Task WriteAllElementsToFile(string VybranySouborLogu, List<string>[] p)
     {
-        StringBuilder sb = new StringBuilder();
-        foreach (List<string> item in p)
-        {
-            sb.AppendLine(PrepareToSerialization2(item));
-        }
+        var sb = new StringBuilder();
+        foreach (var item in p) sb.AppendLine(PrepareToSerialization2(item));
 
         await File.WriteAllTextAsync(VybranySouborLogu, sb.ToString());
     }
 
-    static Type type = typeof(SF);
-
-    public const string replaceForSeparatorString = AllStrings.lowbar;
-    public static readonly char replaceForSeparatorChar = AllChars.lowbar;
-    public static string dDeli = "|";
-
 
     /// <summary>
-    /// Without last |
-    /// DateTime is format with DTHelperEn.ToString
+    ///     Without last |
+    ///     DateTime is format with DTHelperEn.ToString
     /// </summary>
     /// <param name="o"></param>
     public static string PrepareToSerialization(params string[] o)
@@ -472,8 +408,7 @@ public static class SF
     //}
 
     /// <summary>
-    ///
-    /// DateTime is format with DTHelperEn.ToString
+    ///     DateTime is format with DTHelperEn.ToString
     /// </summary>
     /// <param name="o"></param>
     /// <param name="removeLast"></param>
@@ -482,21 +417,15 @@ public static class SF
     {
         var list = o.ToList();
         if (separator == replaceForSeparatorString)
-        {
             throw new Exception("replaceForSeparatorString is the same as separator");
-        }
         CA.Replace(list, separator, replaceForSeparatorString);
         CA.Replace(list, Environment.NewLine, AllStrings.space);
         CA.Trim(list);
-        string vr = string.Join(separator.ToString(), list);
+        var vr = string.Join(separator, list);
 
         if (removeLast)
-        {
             if (vr.Length > 0)
-            {
                 return vr.Substring(0, vr.Length - 1);
-            }
-        }
 
         return vr;
     }
@@ -510,14 +439,10 @@ public static class SF
     /// <param name="var"></param>
     public static List<string> GetAllElementsLine(string var, string oddelovaciZnak = null)
     {
-        if (oddelovaciZnak == null)
-        {
-            oddelovaciZnak = AllStrings.verbar;
-        }
+        if (oddelovaciZnak == null) oddelovaciZnak = AllStrings.verbar;
         // Musí tu být none, protože pak když někde nic nebylo, tak mi to je nevrátilo a progran vyhodil IndexOutOfRangeException
         return SHSplit.SplitMore(var, oddelovaciZnak);
     }
-
 
 
     /// <summary>
@@ -530,36 +455,30 @@ public static class SF
         GetAllElementsFileAdvanced(string file,
             string oddelovaciZnak = "|")
     {
-        if (oddelovaciZnak == null)
-        {
-            oddelovaciZnak = "|";
-        }
+        if (oddelovaciZnak == null) oddelovaciZnak = "|";
 
         var hlavicka = new List<string>();
-        string oz = oddelovaciZnak.ToString();
-        List<List<string>> vr = new List<List<string>>();
+        var oz = oddelovaciZnak;
+        var vr = new List<List<string>>();
         // Sync protože mám v deklaraci out
-        List<string> lines = SHGetLines.GetLines(File.ReadAllText(file));
+        var lines = SHGetLines.GetLines(File.ReadAllText(file));
         CA.Trim(lines);
         if (lines.Count > 0)
         {
             hlavicka = GetAllElementsLine(lines[0], oddelovaciZnak);
-            int musiByt = lines[0].Split(new string[] { oz }, StringSplitOptions.None).Length - 1;
+            var musiByt = lines[0].Split(new[] { oz }, StringSplitOptions.None).Length - 1;
             //int nalezeno = 0;
-            StringBuilder jedenRadek = new StringBuilder();
+            var jedenRadek = new StringBuilder();
 
-            for (int i = 1; i < lines.Count; i++)
+            for (var i = 1; i < lines.Count; i++)
             {
-                if (lines[i].Trim().Length == 0)
-                {
-                    continue;
-                }
+                if (lines[i].Trim().Length == 0) continue;
                 //nalezeno += SH.OccurencesOfStringIn(lines[i], oz);
                 jedenRadek.AppendLine(lines[i]);
                 //if (nalezeno == musiByt)
                 //{
                 //nalezeno = 0;
-                List<string> columns = GetAllElementsLine(jedenRadek.ToString(), oddelovaciZnak);
+                var columns = GetAllElementsLine(jedenRadek.ToString(), oddelovaciZnak);
                 CA.Trim(columns);
                 jedenRadek.Clear();
 
