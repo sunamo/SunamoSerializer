@@ -24,7 +24,7 @@ internal class BTS
 
         if (t == Types.tFloat) return new Func<string, float>(float.Parse);
         if (t == Types.tDouble) return new Func<string, double>(double.Parse);
-        if (t == Types.tInt) return new Func<string, int>(int.Parse);
+        if (t == typeof(int)) return new Func<string, int>(int.Parse);
         if (t == Types.tLong) return new Func<string, long>(long.Parse);
         if (t == Types.tShort) return new Func<string, short>(short.Parse);
         if (t == Types.tDecimal) return new Func<string, decimal>(decimal.Parse);

@@ -14,7 +14,7 @@ public static class SF
         s_contentArgs.separatorString = AllStrings.verbar;
     }
 
-    private static Tuple<string, string, string> t => Exc.GetStackTrace2();
+
 
     public static string separatorString
     {
