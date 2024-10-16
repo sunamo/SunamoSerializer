@@ -2,7 +2,7 @@ namespace SunamoSerializer._sunamo.SunamoData.Data;
 
 internal class SerializeContentArgs
 {
-    internal string separatorString = AllStrings.verbar;
+    internal string separatorString = "|";
 
     /// <summary>
     ///     Must be property - I can forget change value on three occurences.

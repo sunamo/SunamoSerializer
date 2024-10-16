@@ -9,7 +9,7 @@ global using System.Data;
 global using SunamoSerializer._sunamo.SunamoBts;
 global using SunamoSerializer._sunamo.SunamoStringGetLines;
 global using SunamoSerializer._sunamo.SunamoStringSplit;
-global using SunamoSerializer._sunamo.SunamoValues;
+global using SunamoSerializer;
 global using SunamoSerializer._sunamo.SunamoData.Data;
 global using SunamoSerializer._sunamo.SunamoExceptions;
 global using System.Diagnostics;

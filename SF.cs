@@ -2,16 +2,16 @@ namespace SunamoSerializer;
 
 public static class SF
 {
-    public const string replaceForSeparatorString = AllStrings.lowbar;
+    public const string replaceForSeparatorString = "_";
     private static readonly SerializeContentArgs s_contentArgs = new();
 
     private static Type type = typeof(SF);
-    public static readonly char replaceForSeparatorChar = AllChars.lowbar;
+    public static readonly char replaceForSeparatorChar = '_';
     public static string dDeli = "|";
 
     static SF()
     {
-        s_contentArgs.separatorString = AllStrings.verbar;
+        s_contentArgs.separatorString = "|";
     }
 
 
@@ -79,7 +79,7 @@ public static class SF
         {
             var l2 = item.Value.ToList();
             l2.Insert(0, item.Key.ToString());
-            //DebugLogger.Instance.WriteListOneRow(l2, AllStrings.swd);
+            //DebugLogger.Instance.WriteListOneRow(l2, "-");
         }
 
         if (whereIsNotTwoEls.Count != 0)
@@ -95,7 +95,7 @@ public static class SF
     /// <param name="o"></param>
     /// <param name="p1"></param>
     /// <returns></returns>
-    public static string PrepareToSerializationExplicitString(IList o, string p1 = AllStrings.verbar)
+    public static string PrepareToSerializationExplicitString(IList o, string p1 = "|")
     {
         //var o3 = new List<string>(o);
         //var o2 = CA.Trim(o3);
@@ -111,7 +111,7 @@ public static class SF
     /// </summary>
     /// <param name="p1"></param>
     /// <param name="o"></param>
-    public static string PrepareToSerializationExplicit(IList o, string p1 = AllStrings.verbar)
+    public static string PrepareToSerializationExplicit(IList o, string p1 = "|")
     {
         return PrepareToSerializationExplicitString(o, p1);
     }
@@ -138,21 +138,21 @@ public static class SF
         // Příště dopsat komentář pokud budu odkomentovávat
         //if (tf.Count > 0)
         //{
-        //    if (tf[0].StartsWith(AllStrings.num))
+        //    if (tf[0].StartsWith("#"))
         //    {
         //        return tf[0];
         //    }
         //}
 
 
-        //CA.RemoveStartingWith(AllStrings.num, tf);
+        //CA.RemoveStartingWith("#", tf);
 
-        tf = tf.Where(d => !d.StartsWith(AllStrings.num)).ToList();
+        tf = tf.Where(d => !d.StartsWith("#")).ToList();
         return tf;
     }
 
     public static List<List<string>> GetAllElementsFile(string file, ref string firstCommentLine,
-        string oddelovaciZnak = AllStrings.verbar)
+        string oddelovaciZnak = "|")
     {
         var (header, rows) = GetAllElementsFileAdvanced(file, oddelovaciZnak);
         if (header.Count > 0) rows.Insert(0, header);
@@ -232,7 +232,7 @@ public static class SF
     ///     If need to combine string and IList, lets use CA.Join
     /// </summary>
     /// <param name="o"></param>
-    public static string PrepareToSerializationExplicit2(IList<string> o, string separator = AllStrings.verbar)
+    public static string PrepareToSerializationExplicit2(IList<string> o, string separator = "|")
     {
         return PrepareToSerializationWorker(o, true, separator);
     }
@@ -281,11 +281,8 @@ public static class SF
 #endif
         AppendAllText(string path, string line)
     {
-        var content = SHGetLines.GetLines(
-#if ASYNC
-            await
-#endif
-                File.ReadAllTextAsync(path)).ToList();
+        var content = (await
+                File.ReadAllLinesAsync(path)).ToList();
         CA.Trim(content);
         //content += Environment.NewLine + line + Environment.NewLine;
         content.Add(line);
@@ -419,7 +416,7 @@ public static class SF
         if (separator == replaceForSeparatorString)
             throw new Exception("replaceForSeparatorString is the same as separator");
         CA.Replace(list, separator, replaceForSeparatorString);
-        CA.Replace(list, Environment.NewLine, AllStrings.space);
+        CA.Replace(list, Environment.NewLine, "");
         CA.Trim(list);
         var vr = string.Join(separator, list);
 
@@ -439,7 +436,7 @@ public static class SF
     /// <param name="var"></param>
     public static List<string> GetAllElementsLine(string var, string oddelovaciZnak = null)
     {
-        if (oddelovaciZnak == null) oddelovaciZnak = AllStrings.verbar;
+        if (oddelovaciZnak == null) oddelovaciZnak = "|";
         // Musí tu být none, protože pak když někde nic nebylo, tak mi to je nevrátilo a progran vyhodil IndexOutOfRangeException
         return SHSplit.SplitMore(var, oddelovaciZnak);
     }
@@ -461,7 +458,7 @@ public static class SF
         var oz = oddelovaciZnak;
         var vr = new List<List<string>>();
         // Sync protože mám v deklaraci out
-        var lines = SHGetLines.GetLines(File.ReadAllText(file));
+        var lines = File.ReadAllLines(file).ToList();
         CA.Trim(lines);
         if (lines.Count > 0)
         {
