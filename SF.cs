@@ -90,33 +90,6 @@ public static class SF
     }
 
     /// <summary>
-    ///     Without last |
-    /// </summary>
-    /// <param name="o"></param>
-    /// <param name="p1"></param>
-    /// <returns></returns>
-    public static string PrepareToSerializationExplicitString(IList o, string p1 = "|")
-    {
-        //var o3 = new List<string>(o);
-        //var o2 = CA.Trim(o3);
-        var vr = string.Join(p1, o);
-        return vr;
-        //return vr.Substring(0, vr.Length - p1.Length);
-    }
-
-    /// <summary>
-    ///     Without last |
-    ///     If need to combine string and IList, lets use CA.Join
-    ///     DateTime is format with DTHelperEn.ToString
-    /// </summary>
-    /// <param name="p1"></param>
-    /// <param name="o"></param>
-    public static string PrepareToSerializationExplicit(IList o, string p1 = "|")
-    {
-        return PrepareToSerializationExplicitString(o, p1);
-    }
-
-    /// <summary>
     ///     In inner array is elements, in outer lines.
     /// </summary>
     /// <param name="file"></param>
@@ -187,7 +160,7 @@ public static class SF
     public static async Task WriteAllElementsToFile(string VybranySouborLogu, List<List<string>> p)
     {
         var sb = new StringBuilder();
-        foreach (var item in p) sb.AppendLine(PrepareToSerialization2(item));
+        foreach (var item in p) sb.AppendLine(PrepareToSerialization(item));
 
         await File.WriteAllTextAsync(VybranySouborLogu, sb.ToString());
     }
@@ -203,18 +176,6 @@ public static class SF
         return vs;
     }
 
-    /// <summary>
-    ///     Without last |
-    ///     DateTime is format with DTHelperEn.ToString
-    /// </summary>
-    /// <param name="o"></param>
-    /// <param name="separator"></param>
-    public static string PrepareToSerialization2(IList<string> o)
-    {
-        return PrepareToSerializationWorker(o, true, dDeli);
-    }
-
-
     ///// <summary>
     ///// Return without last
     ///// DateTime is serialize always in english format
@@ -226,16 +187,6 @@ public static class SF
     //    var ts = new List<string>(pr);
     //    return PrepareToSerializationWorker(ts, true, separatorString);
     //}
-
-    /// <summary>
-    ///     Return without last
-    ///     If need to combine string and IList, lets use CA.Join
-    /// </summary>
-    /// <param name="o"></param>
-    public static string PrepareToSerializationExplicit2(IList<string> o, string separator = "|")
-    {
-        return PrepareToSerializationWorker(o, true, separator);
-    }
 
     public static
 #if ASYNC
@@ -376,7 +327,7 @@ public static class SF
     public static async Task WriteAllElementsToFile(string VybranySouborLogu, List<string>[] p)
     {
         var sb = new StringBuilder();
-        foreach (var item in p) sb.AppendLine(PrepareToSerialization2(item));
+        foreach (var item in p) sb.AppendLine(PrepareToSerialization(item));
 
         await File.WriteAllTextAsync(VybranySouborLogu, sb.ToString());
     }
@@ -389,7 +340,19 @@ public static class SF
     /// <param name="o"></param>
     public static string PrepareToSerialization(params string[] o)
     {
-        return PrepareToSerializationWorker(o.ToList(), true, dDeli);
+        return PrepareToSerialization(o.ToList(), dDeli);
+    }
+
+    public static string PrepareToSerialization(List<string> list, string separator = "|")
+    {
+        if (separator == replaceForSeparatorString)
+            throw new Exception("replaceForSeparatorString is the same as separator");
+        CA.Replace(list, separator, replaceForSeparatorString);
+        CA.Replace(list, Environment.NewLine, "");
+        CA.Trim(list);
+        var vr = string.Join(separator, list);
+
+        return vr;
     }
 
     ///// <summary>
@@ -403,29 +366,6 @@ public static class SF
     //    var ts = new List<string>(pr);
     //    return PrepareToSerializationWorker(ts, true, separatorString);
     //}
-
-    /// <summary>
-    ///     DateTime is format with DTHelperEn.ToString
-    /// </summary>
-    /// <param name="o"></param>
-    /// <param name="removeLast"></param>
-    /// <param name="separator"></param>
-    private static string PrepareToSerializationWorker(IList<string> o, bool removeLast, string separator)
-    {
-        var list = o.ToList();
-        if (separator == replaceForSeparatorString)
-            throw new Exception("replaceForSeparatorString is the same as separator");
-        CA.Replace(list, separator, replaceForSeparatorString);
-        CA.Replace(list, Environment.NewLine, "");
-        CA.Trim(list);
-        var vr = string.Join(separator, list);
-
-        if (removeLast)
-            if (vr.Length > 0)
-                return vr.Substring(0, vr.Length - 1);
-
-        return vr;
-    }
 
     /// <summary>
     ///     Get all elements from A1
