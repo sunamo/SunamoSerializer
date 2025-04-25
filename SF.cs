@@ -378,7 +378,7 @@ public static class SF
     {
         if (oddelovaciZnak == null) oddelovaciZnak = "|";
         // Musí tu být none, protože pak když někde nic nebylo, tak mi to je nevrátilo a progran vyhodil IndexOutOfRangeException
-        return SHSplit.SplitMore(var, oddelovaciZnak);
+        return SHSplit.Split(var, oddelovaciZnak);
     }
 
 
