@@ -96,8 +96,7 @@ public static class SF
     /// <returns></returns>
     public static List<List<string>> GetAllElementsFile(string file)
     {
-        string firstLine = null;
-        return GetAllElementsFile(file, ref firstLine);
+        return GetAllElementsFile(file);
     }
 
 
@@ -124,7 +123,7 @@ public static class SF
         return tf;
     }
 
-    public static List<List<string>> GetAllElementsFile(string file, ref string firstCommentLine,
+    public static List<List<string>> GetAllElementsFile(string file,
         string oddelovaciZnak = "|")
     {
         var (header, rows) = GetAllElementsFileAdvanced(file, oddelovaciZnak);
@@ -249,13 +248,9 @@ public static class SF
         return vr;
     }
 
-    private static List<List<string>> GetAllElementsLines(List<string> lines)
-    {
-        string firstLine = null;
-        return GetAllElementsLines(lines, ref firstLine);
-    }
 
-    private static List<List<string>> GetAllElementsLines(List<string> lines, ref string firstLIne)
+
+    private static List<List<string>> GetAllElementsLines(List<string> lines)
     {
         lines = RemoveComments(lines);
 
@@ -312,11 +307,11 @@ public static class SF
     ///     Read text with first delimitech which automatically delimite
     /// </summary>
     /// <param name="fileNameOrPath"></param>
-    public static void ReadFileOfSettingsOther(string fileNameOrPath)
+    public static void ReadFileOfSettingsOther(string fileNameOrPath, Func<string, string> appDataCiReadFileOfSettingsOther)
     {
         // COmmented, app data not should be in *.web. pass directly as arg
         List<string> lines = null;
-        //SHGetLines.GetLines(AppData.ci.ReadFileOfSettingsOther(fileNameOrPath));
+        lines = SHGetLines.GetLines(appDataCiReadFileOfSettingsOther(fileNameOrPath));
         if (lines.Count > 1)
         {
             int delimiterInt;
