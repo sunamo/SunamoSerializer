@@ -1,4 +1,5 @@
 namespace SunamoSerializer._sunamo.SunamoExceptions;
+
 internal partial class ThrowEx
 {
 
@@ -7,4 +8,9 @@ internal partial class ThrowEx
 
 
     #endregion
+    internal static void Custom(string v)
+    {
+        Debugger.Break();
+        throw new Exception(v);
+    }
 }
