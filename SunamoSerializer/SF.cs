@@ -150,10 +150,10 @@ public static class SF
             File.WriteAllTextAsync(file, sb.ToString());
     }
 
-    public static void WriteAllElementsToFile<Key, Value>(string coolPeopleShortcuts, Dictionary<Key, Value> d2)
+    public static async Task WriteAllElementsToFile<Key, Value>(string coolPeopleShortcuts, Dictionary<Key, Value> d2)
     {
         var list = ListFromDictionary(d2);
-        WriteAllElementsToFile(coolPeopleShortcuts, list);
+        await WriteAllElementsToFile(coolPeopleShortcuts, list);
     }
 
     public static async Task WriteAllElementsToFile(string VybranySouborLogu, List<List<string>> p)
