@@ -1,10 +1,13 @@
-﻿namespace SunamoSerializer.Tests;
+// EN: Variable names have been checked and replaced with self-descriptive names
+// CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
+
+namespace SunamoSerializer.Tests;
 public class SFTests
 {
     [Fact]
     public void PrepareToSerializationTest()
     {
-        var s = SF.PrepareToSerialization("ab", "cd");
+        var text = SF.PrepareToSerialization("ab", "cd");
 
 
     }

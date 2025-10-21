@@ -1,3 +1,6 @@
+// EN: Variable names have been checked and replaced with self-descriptive names
+// CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
+
 namespace SunamoSerializer;
 
 public static class SF
@@ -33,17 +36,17 @@ public static class SF
     //CASH
     public static List<string> ParseUpToRequiredElementsLine(string input, int requiredCount)
     {
-        var p = GetAllElementsLine(input);
-        if (p.Count > requiredCount)
-            throw new Exception($"p have {p.Count} elements, max is {requiredCount}");
-        if (p.Count < requiredCount)
-            for (var i = p.Count - 1; i < requiredCount; i++)
-                p.Add(string.Empty);
+        var parameter = GetAllElementsLine(input);
+        if (parameter.Count > requiredCount)
+            throw new Exception($"p have {parameter.Count} elements, max is {requiredCount}");
+        if (parameter.Count < requiredCount)
+            for (var i = parameter.Count - 1; i < requiredCount; i++)
+                parameter.Add(string.Empty);
 
-        return p;
+        return parameter;
     }
 
-    public static Dictionary<T1, T2> ToDictionary<T1, T2>(List<List<string>> l)
+    public static Dictionary<T1, T2> ToDictionary<T1, T2>(List<List<string>> list)
     {
         var s1 = BTS.MethodForParse<T1>();
         var s2 = BTS.MethodForParse<T2>();
@@ -60,7 +63,7 @@ public static class SF
 
         var i = -1;
 
-        foreach (var item in l)
+        foreach (var item in list)
         {
             i++;
 
@@ -140,14 +143,14 @@ public static class SF
 #endif
         Dictionary<T1, T2>(string file, Dictionary<T1, T2> artists)
     {
-        var sb = new StringBuilder();
-        foreach (var item in artists) sb.AppendLine(PrepareToSerialization(item.Key.ToString(), item.Value.ToString()));
+        var stringBuilder = new StringBuilder();
+        foreach (var item in artists) stringBuilder.AppendLine(PrepareToSerialization(item.Key.ToString(), item.Value.ToString()));
 
 
 #if ASYNC
         await
 #endif
-            File.WriteAllTextAsync(file, sb.ToString());
+            File.WriteAllTextAsync(file, stringBuilder.ToString());
     }
 
     public static async Task WriteAllElementsToFile<Key, Value>(string coolPeopleShortcuts, Dictionary<Key, Value> d2)
@@ -156,12 +159,12 @@ public static class SF
         await WriteAllElementsToFile(coolPeopleShortcuts, list);
     }
 
-    public static async Task WriteAllElementsToFile(string VybranySouborLogu, List<List<string>> p)
+    public static async Task WriteAllElementsToFile(string VybranySouborLogu, List<List<string>> parameter)
     {
-        var sb = new StringBuilder();
-        foreach (var item in p) sb.AppendLine(PrepareToSerialization(item));
+        var stringBuilder = new StringBuilder();
+        foreach (var item in parameter) stringBuilder.AppendLine(PrepareToSerialization(item));
 
-        await File.WriteAllTextAsync(VybranySouborLogu, sb.ToString());
+        await File.WriteAllTextAsync(VybranySouborLogu, stringBuilder.ToString());
     }
 
     public static List<List<string>> ListFromDictionary<Key, Value>(Dictionary<Key, Value> d2)
@@ -195,12 +198,12 @@ public static class SF
 #endif
         DictionaryAppend(string v, Dictionary<int, string> toSave)
     {
-        var c = await File.ReadAllTextAsync(v);
-        var s = ListFromDictionary(toSave);
-        var s2 = ToDictionary<int, string>(s);
+        var count = await File.ReadAllTextAsync(v);
+        var text = ListFromDictionary(toSave);
+        var s2 = ToDictionary<int, string>(text);
 
-        var sb = new StringBuilder();
-        foreach (var item in s2) sb.AppendLine(PrepareToSerialization(item.Key.ToString(), item.Value));
+        var stringBuilder = new StringBuilder();
+        foreach (var item in s2) stringBuilder.AppendLine(PrepareToSerialization(item.Key.ToString(), item.Value));
 
 #if ASYNC
         await
@@ -319,12 +322,12 @@ public static class SF
         }
     }
 
-    public static async Task WriteAllElementsToFile(string VybranySouborLogu, List<string>[] p)
+    public static async Task WriteAllElementsToFile(string VybranySouborLogu, List<string>[] parameter)
     {
-        var sb = new StringBuilder();
-        foreach (var item in p) sb.AppendLine(PrepareToSerialization(item));
+        var stringBuilder = new StringBuilder();
+        foreach (var item in parameter) stringBuilder.AppendLine(PrepareToSerialization(item));
 
-        await File.WriteAllTextAsync(VybranySouborLogu, sb.ToString());
+        await File.WriteAllTextAsync(VybranySouborLogu, stringBuilder.ToString());
     }
 
 
