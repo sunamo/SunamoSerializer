@@ -5,7 +5,7 @@ namespace SunamoSerializer._sunamo.SunamoBts;
 
 internal class BTS
 {
-    internal static string ToString<T>(type type)
+    internal static string ToString<T>(Type type)
     {
         return type.ToString();
     }
@@ -18,7 +18,7 @@ internal class BTS
 
         #region MyRegion
 
-        if (type == Types.tString) return new Func<string, string>(ToString);
+        if (type == Types.tString) return new Func<string, string>(s => s);
         if (type == Types.tBool) return new Func<string, bool>(bool.Parse);
 
         #endregion

@@ -208,7 +208,7 @@ public static class SF
 #if ASYNC
         await
 #endif
-            File.AppendAllTextAsync(v, sb + Environment.NewLine);
+            File.AppendAllTextAsync(v, stringBuilder + Environment.NewLine);
     }
 
     /// <param name="element"></param>
