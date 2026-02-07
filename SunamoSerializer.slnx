@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="SunamoSerializer.Tests\\SunamoSerializer.Tests.csproj" />
+  <Project Path="RunnerSerializer\\RunnerSerializer.csproj" />
+  <Project Path="SunamoSerializer\SunamoSerializer.csproj" />
+</Solution>
