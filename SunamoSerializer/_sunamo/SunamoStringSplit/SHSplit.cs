@@ -1,9 +1,15 @@
 namespace SunamoSerializer._sunamo.SunamoStringSplit;
 
+/// <summary>
+/// Provides string splitting utilities.
+/// </summary>
 internal class SHSplit
 {
-    internal static List<string> Split(string p, params string[] newLine)
+    /// <summary>
+    /// Splits a string by the specified delimiters, removing empty entries.
+    /// </summary>
+    internal static List<string> Split(string text, params string[] delimiters)
     {
-        return p.Split(newLine, StringSplitOptions.RemoveEmptyEntries).ToList();
+        return text.Split(delimiters, StringSplitOptions.RemoveEmptyEntries).ToList();
     }
 }

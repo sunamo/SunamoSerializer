@@ -1,159 +1,151 @@
 namespace SunamoSerializer;
 
-// EN: Variable names have been checked and replaced with self-descriptive names
-// CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
+/// <summary>
+/// Provides additional serialization and deserialization utilities (partial class extension).
+/// </summary>
 public static partial class SF
 {
     /// <summary>
-    ///     If index won't founded, return null.
+    /// Gets the element at specified indices from a file. Returns null if not found.
     /// </summary>
-    /// <param name = "element"></param>
-    /// <param name = "line"></param>
-    public static string GetElementAtIndexFile(string file, int element, int line)
+    /// <param name="filePath">Path to the file to read.</param>
+    /// <param name="elementIndex">The element index within a line.</param>
+    /// <param name="lineIndex">The line index in the file.</param>
+    /// <returns>The element at the specified position, or null if not found.</returns>
+    public static string? GetElementAtIndexFile(string filePath, int elementIndex, int lineIndex)
     {
-        var elements = GetAllElementsFile(file);
-        return GetElementAtIndex(elements, element, line);
+        var list = GetAllElementsFile(filePath);
+        return GetElementAtIndex(list, elementIndex, lineIndex);
     }
 
     /// <summary>
-    ///     G null if first element on any lines A2 dont exists
+    /// Gets the first line where the first element matches the specified value. Returns null if not found.
     /// </summary>
-    /// <param name = "file"></param>
-    /// <param name = "element"></param>
-    public static List<string> GetFirstWhereIsFirstElement(string file, string element)
+    /// <param name="filePath">Path to the file to read.</param>
+    /// <param name="firstElement">The value to match against the first element of each line.</param>
+    /// <returns>The matching line as a list of elements, or null if not found.</returns>
+    public static List<string>? GetFirstWhereIsFirstElement(string filePath, string firstElement)
     {
-        var elementsLines = GetAllElementsFile(file);
-        for (var i = 0; i < elementsLines.Count; i++)
-            if (elementsLines[i][0] == element)
-                return elementsLines[i];
+        var list = GetAllElementsFile(filePath);
+        for (var i = 0; i < list.Count; i++)
+            if (list[i][0] == firstElement)
+                return list[i];
         return null;
     }
 
     /// <summary>
-    ///     G null if first element on any lines A2 dont exists
+    /// Gets the last line where the first element matches the specified value. Returns null if not found.
     /// </summary>
-    /// <param name = "file"></param>
-    /// <param name = "element"></param>
-    public static List<string> GetLastWhereIsFirstElement(string file, string element)
+    /// <param name="filePath">Path to the file to read.</param>
+    /// <param name="firstElement">The value to match against the first element of each line.</param>
+    /// <returns>The matching line as a list of elements, or null if not found.</returns>
+    public static List<string>? GetLastWhereIsFirstElement(string filePath, string firstElement)
     {
-        var elementsLines = GetAllElementsFile(file);
-        for (var i = elementsLines.Count - 1; i >= 0; i--)
-            if (elementsLines[i][0] == element)
-                return elementsLines[i];
+        var list = GetAllElementsFile(filePath);
+        for (var i = list.Count - 1; i >= 0; i--)
+            if (list[i][0] == firstElement)
+                return list[i];
         return null;
     }
 
     /// <summary>
-    ///     Read text with first delimitech which automatically delimite
+    /// Reads a settings file and extracts the separator from its first line.
     /// </summary>
-    /// <param name = "fileNameOrPath"></param>
-    public static void ReadFileOfSettingsOther(string fileNameOrPath, Func<string, string> appDataCiReadFileOfSettingsOther)
+    /// <param name="filePath">Path or name of the settings file.</param>
+    /// <param name="readFileFunc">Function that resolves the file path and reads its content.</param>
+    public static void ReadFileOfSettingsOther(string filePath, Func<string, string> readFileFunc)
     {
-        // COmmented, app data not should be in *.web. pass directly as arg
-        List<string> lines = null;
-        lines = SHGetLines.GetLines(appDataCiReadFileOfSettingsOther(fileNameOrPath));
+        var lines = SHGetLines.GetLines(readFileFunc(filePath));
         if (lines.Count > 1)
         {
-            int delimiterInt;
-            if (int.TryParse(lines[0], out delimiterInt))
-                separatorString = ((char)delimiterInt).ToString();
+            if (int.TryParse(lines[0], out int delimiterInt))
+                SeparatorString = ((char)delimiterInt).ToString();
         }
     }
 
-    public static async Task WriteAllElementsToFile(string VybranySouborLogu, List<string>[] parameter)
+    /// <summary>
+    /// Writes all element arrays to a file in serialized format.
+    /// </summary>
+    /// <param name="filePath">Path to the output file.</param>
+    /// <param name="array">Array of element lists to serialize and write.</param>
+    public static async Task WriteAllElementsToFile(string filePath, List<string>[] array)
     {
         var stringBuilder = new StringBuilder();
-        foreach (var item in parameter)
+        foreach (var item in array)
             stringBuilder.AppendLine(PrepareToSerialization(item));
-        await File.WriteAllTextAsync(VybranySouborLogu, stringBuilder.ToString());
+        await File.WriteAllTextAsync(filePath, stringBuilder.ToString());
     }
 
     /// <summary>
-    ///     Without last |
-    ///     DateTime is format with DTHelperEn.ToString
+    /// Serializes string elements into a single delimited line using the default delimiter.
     /// </summary>
-    /// <param name = "o"></param>
-    public static string PrepareToSerialization(params string[] o)
+    /// <param name="elements">The elements to serialize.</param>
+    /// <returns>A delimited string containing all elements.</returns>
+    public static string PrepareToSerialization(params string[] elements)
     {
-        return PrepareToSerialization(o.ToList(), dDeli);
+        return PrepareToSerialization(elements.ToList(), DefaultDelimiter);
     }
 
+    /// <summary>
+    /// Serializes a list of strings into a single delimited line.
+    /// </summary>
+    /// <param name="list">The list of strings to serialize.</param>
+    /// <param name="separator">The separator string to use between elements.</param>
+    /// <returns>A delimited string containing all elements.</returns>
     public static string PrepareToSerialization(List<string> list, string separator = "|")
     {
-        if (separator == replaceForSeparatorString)
-            throw new Exception("replaceForSeparatorString is the same as separator");
-        CA.Replace(list, separator, replaceForSeparatorString);
+        if (separator == ReplaceForSeparatorString)
+            throw new Exception("ReplaceForSeparatorString is the same as separator");
+        CA.Replace(list, separator, ReplaceForSeparatorString);
         CA.Replace(list, Environment.NewLine, "");
         CA.Trim(list);
-        var vr = string.Join(separator, list);
-        return vr;
-    }
-
-    ///// <summary>
-    ///// Return without last
-    ///// DateTime is serialize always in english format
-    ///// Opposite method: DTHelperEn.ToString<>DTHelperEn.ParseDateTimeUSA
-    ///// </summary>
-    ///// <param name="pr"></param>
-    //public static string PrepareToSerialization2(params string[] pr)
-    //{
-    //    var ts = new List<string>(pr);
-    //    return PrepareToSerializationWorker(ts, true, separatorString);
-    //}
-    /// <summary>
-    ///     Get all elements from A1
-    ///     A2 byl object ale dal jsem ho jako string
-    ///     nemůžu to dávat jako object protože SHSplit.Split musí být typový. Např. když mám allWhiteChars který je List
-    ///     <object> a po přenesení do params string[] mi vytvoří new string[]{}
-    /// </summary>
-    /// <param name = "var"></param>
-    public static List<string> GetAllElementsLine(string var, string oddelovaciZnak = null)
-    {
-        if (oddelovaciZnak == null)
-            oddelovaciZnak = "|";
-        // Musí tu být none, protože pak když někde nic nebylo, tak mi to je nevrátilo a progran vyhodil IndexOutOfRangeException
-        return SHSplit.Split(var, oddelovaciZnak);
+        var result = string.Join(separator, list);
+        return result;
     }
 
     /// <summary>
-    ///     In result A1 is not
+    /// Gets all elements from a single line using the specified separator.
     /// </summary>
-    /// <param name = "file"></param>
-    /// <param name = "hlavicka"></param>
-    /// <param name = "oddelovaciZnak"></param>
-    public static (List<string> header, List<List<string>> rows) GetAllElementsFileAdvanced(string file, string oddelovaciZnak = "|")
+    /// <param name="text">The line to parse.</param>
+    /// <param name="separator">The separator string used between elements. Defaults to "|".</param>
+    /// <returns>List of parsed elements from the line.</returns>
+    public static List<string> GetAllElementsLine(string text, string? separator = null)
     {
-        if (oddelovaciZnak == null)
-            oddelovaciZnak = "|";
-        var hlavicka = new List<string>();
-        var oz = oddelovaciZnak;
-        var vr = new List<List<string>>();
-        // Sync protože mám v deklaraci out
-        var lines = File.ReadAllLines(file).ToList();
+        if (separator == null)
+            separator = "|";
+        return SHSplit.Split(text, separator);
+    }
+
+    /// <summary>
+    /// Gets all elements from a file, returning header and data rows separately.
+    /// </summary>
+    /// <param name="filePath">Path to the file to read.</param>
+    /// <param name="separator">The separator string used between elements. Defaults to "|".</param>
+    /// <returns>A tuple containing the header elements and a list of row element lists.</returns>
+    public static (List<string> header, List<List<string>> rows) GetAllElementsFileAdvanced(string filePath, string separator = "|")
+    {
+        if (separator == null)
+            separator = "|";
+        var header = new List<string>();
+        var result = new List<List<string>>();
+        var lines = File.ReadAllLines(filePath).ToList();
         CA.Trim(lines);
         if (lines.Count > 0)
         {
-            hlavicka = GetAllElementsLine(lines[0], oddelovaciZnak);
-            var musiByt = lines[0].Split(new[] { oz }, StringSplitOptions.None).Length - 1;
-            //int nalezeno = 0;
-            var jedenRadek = new StringBuilder();
+            header = GetAllElementsLine(lines[0], separator);
+            var singleLineBuilder = new StringBuilder();
             for (var i = 1; i < lines.Count; i++)
             {
                 if (lines[i].Trim().Length == 0)
                     continue;
-                //nalezeno += SH.OccurencesOfStringIn(lines[i], oz);
-                jedenRadek.AppendLine(lines[i]);
-                //if (nalezeno == musiByt)
-                //{
-                //nalezeno = 0;
-                var columns = GetAllElementsLine(jedenRadek.ToString(), oddelovaciZnak);
-                CA.Trim(columns);
-                jedenRadek.Clear();
-                vr.Add(columns);
-            //}
+                singleLineBuilder.AppendLine(lines[i]);
+                var elements = GetAllElementsLine(singleLineBuilder.ToString(), separator);
+                CA.Trim(elements);
+                singleLineBuilder.Clear();
+                result.Add(elements);
             }
         }
 
-        return (hlavicka, vr);
+        return (header, result);
     }
 }

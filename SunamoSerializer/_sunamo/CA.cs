@@ -1,31 +1,33 @@
 namespace SunamoSerializer._sunamo;
 
+/// <summary>
+/// Provides collection and array manipulation utilities.
+/// </summary>
 internal class CA
 {
-    static string Replace(string s, string from, string to)
+    static string Replace(string text, string what, string replacement)
     {
-        return s.Replace(from, to);
+        return text.Replace(what, replacement);
     }
+
     /// <summary>
-    /// Direct edit
+    /// Replaces all occurrences of a substring in each element of a string list. Modifies the list in place.
     /// </summary>
-    /// <param name="files_in"></param>
-    /// <param name="what"></param>
-    /// <param name="forWhat"></param>
-    internal static void Replace(List<string> files_in, string what, string forWhat)
+    internal static void Replace(List<string> list, string what, string replacement)
     {
-        for (int i = 0; i < files_in.Count; i++)
+        for (int i = 0; i < list.Count; i++)
         {
-            files_in[i] = Replace(files_in[i], what, forWhat);
+            list[i] = Replace(list[i], what, replacement);
         }
-        //CAChangeContent.ChangeContent2(null, files_in, Replace, what, forWhat);
     }
 
-    internal static List<string> Trim(List<string> l)
+    /// <summary>
+    /// Trims whitespace from each element in a string list. Modifies the list in place.
+    /// </summary>
+    internal static List<string> Trim(List<string> list)
     {
-        for (var i = 0; i < l.Count; i++) l[i] = l[i].Trim();
+        for (var i = 0; i < list.Count; i++) list[i] = list[i].Trim();
 
-        return l;
+        return list;
     }
-
 }

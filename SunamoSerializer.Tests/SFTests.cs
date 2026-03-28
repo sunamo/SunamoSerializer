@@ -1,14 +1,17 @@
-// EN: Variable names have been checked and replaced with self-descriptive names
-// CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
-
 namespace SunamoSerializer.Tests;
+
+/// <summary>
+/// Tests for the SF serialization class.
+/// </summary>
 public class SFTests
 {
+    /// <summary>
+    /// Tests that PrepareToSerialization correctly joins elements with default delimiter.
+    /// </summary>
     [Fact]
     public void PrepareToSerializationTest()
     {
-        var text = SF.PrepareToSerialization("ab", "cd");
-
-
+        var result = SF.PrepareToSerialization("ab", "cd");
+        Assert.Equal("ab|cd", result);
     }
 }
