@@ -1,7 +1,13 @@
 namespace SunamoSerializer._sunamo.SunamoBts;
 
+/// <summary>
+/// Provides base type system utilities for parsing and type conversion.
+/// </summary>
 internal class BTS
 {
+    /// <summary>
+    /// Returns a parsing function delegate for the specified type, or null if the type is not supported.
+    /// </summary>
     internal static object? MethodForParse<T>()
     {
         var type = typeof(T);
