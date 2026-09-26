@@ -73,7 +73,7 @@ public static partial class SF
         var stringBuilder = new StringBuilder();
         foreach (var item in array)
             stringBuilder.AppendLine(PrepareToSerialization(item));
-        await File.WriteAllTextAsync(filePath, stringBuilder.ToString());
+        await FileAsync.WriteAllTextAsync(filePath, stringBuilder.ToString());
     }
 
     /// <summary>

@@ -125,20 +125,13 @@ public static partial class SF
     /// <param name="filePath">Path to the output file.</param>
     /// <param name="dictionary">The dictionary to serialize and write.</param>
     public static
-#if ASYNC
         async Task
-#else
-    void
-#endif
     Dictionary<TKey, TValue>(string filePath, Dictionary<TKey, TValue> dictionary) where TKey : notnull
     {
         var stringBuilder = new StringBuilder();
         foreach (var item in dictionary)
             stringBuilder.AppendLine(PrepareToSerialization(item.Key.ToString()!, item.Value?.ToString() ?? ""));
-#if ASYNC
-        await
-#endif
-        File.WriteAllTextAsync(filePath, stringBuilder.ToString());
+        await FileAsync.WriteAllTextAsync(filePath, stringBuilder.ToString());
     }
 
     /// <summary>
@@ -164,7 +157,7 @@ public static partial class SF
         var stringBuilder = new StringBuilder();
         foreach (var item in list)
             stringBuilder.AppendLine(PrepareToSerialization(item));
-        await File.WriteAllTextAsync(filePath, stringBuilder.ToString());
+        await FileAsync.WriteAllTextAsync(filePath, stringBuilder.ToString());
     }
 
     /// <summary>
@@ -191,11 +184,7 @@ public static partial class SF
     /// <param name="filePath">Path to the file to append to.</param>
     /// <param name="dictionary">The dictionary to serialize and append.</param>
     public static
-#if ASYNC
         async Task
-#else
-    void
-#endif
     DictionaryAppend(string filePath, Dictionary<int, string> dictionary)
     {
         var entries = ListFromDictionary(dictionary);
@@ -203,10 +192,7 @@ public static partial class SF
         var stringBuilder = new StringBuilder();
         foreach (var item in normalizedDictionary)
             stringBuilder.AppendLine(PrepareToSerialization(item.Key.ToString(), item.Value));
-#if ASYNC
-        await
-#endif
-        File.AppendAllTextAsync(filePath, stringBuilder + Environment.NewLine);
+        await FileAsync.AppendAllTextAsync(filePath, stringBuilder + Environment.NewLine);
     }
 
     /// <summary>
@@ -231,21 +217,16 @@ public static partial class SF
     /// <param name="line">The line to append.</param>
     /// <returns>All elements from the file after appending.</returns>
     public static
-#if ASYNC
         async Task<List<List<string>>>
-#else
-    List<List<string>>
-#endif
     AppendAllText(string filePath, string line)
     {
-        var content = (await File.ReadAllLinesAsync(filePath)).ToList();
+        var content = (
+            await FileAsync.ReadAllLinesAsync(filePath)
+            ).ToList();
         CA.Trim(content);
         content.Add(line);
         var result = GetAllElementsLines(content);
-#if ASYNC
-        await
-#endif
-        File.WriteAllLinesAsync(filePath, content);
+        await FileAsync.WriteAllLinesAsync(filePath, content);
         return result;
     }
 
