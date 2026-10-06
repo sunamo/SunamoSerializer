@@ -1,13 +1,7 @@
 namespace SunamoSerializer._sunamo;
 
-/// <summary>
-/// Provides utilities for splitting text into lines with proper newline handling.
-/// </summary>
 internal class SHGetLines
 {
-    /// <summary>
-    /// Splits text into lines handling all newline formats (CRLF, LFCR, CR, LF).
-    /// </summary>
     internal static List<string> GetLines(string text)
     {
         var lines = text.Split(new[] { "\r\n", "\n\r" }, StringSplitOptions.None).ToList();

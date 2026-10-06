@@ -1,8 +1,5 @@
 namespace SunamoSerializer._sunamo;
 
-/// <summary>
-/// Provides cached type references for common .NET types used in serialization and type checking.
-/// </summary>
 internal class Types
 {
     internal static readonly Type ObjectType = typeof(object);
