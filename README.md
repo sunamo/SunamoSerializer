@@ -1,5 +1,10 @@
 # SunamoSerializer
 
+## Short description
+
+Knihovna pro správu textových souborů s daty včetně hlaviček a oddělovačů. Umí je načíst a zapsat. Obsahuje Runner a testy.
+
+
 Management of txt files with data, including support for headers and delimited content.
 
 ## Overview
