@@ -114,6 +114,34 @@ public static partial class SF
     }
 
     /// <summary>
+    /// Splits a line by the separator and keeps empty elements, so the position of every column is preserved.
+    /// </summary>
+    /// <param name="text">The line to split.</param>
+    /// <param name="separator">The separator string used between elements.</param>
+    /// <returns>All elements of the line, trimmed, including the empty ones.</returns>
+    public static List<string> GetAllElementsLineKeepEmpty(string text, string separator = "|")
+    {
+        return text.Split(new[] { separator }, StringSplitOptions.None).Select(element => element.Trim()).ToList();
+    }
+
+    /// <summary>
+    /// Reads all non-blank lines of a file and splits each by the separator, keeping empty elements. A missing file gives an empty list.
+    /// </summary>
+    /// <param name="filePath">Path to the file to read.</param>
+    /// <param name="separator">The separator string used between elements.</param>
+    /// <returns>One list of elements per non-blank line, without any header handling.</returns>
+    public static List<List<string>> GetAllElementsFileKeepEmpty(string filePath, string separator = "|")
+    {
+        var result = new List<List<string>>();
+        if (!File.Exists(filePath))
+            return result;
+        foreach (var line in File.ReadAllLines(filePath))
+            if (!string.IsNullOrWhiteSpace(line))
+                result.Add(GetAllElementsLineKeepEmpty(line, separator));
+        return result;
+    }
+
+    /// <summary>
     /// Initializes a new instance of the get all elements file advanced class.
     /// </summary>
     /// <param name="header">The header.</param>
